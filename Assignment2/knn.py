@@ -21,21 +21,42 @@ with open('binary_points.csv', 'r') as csvfile:
       if i > 0: #skipping the header
          db.append (row)
 
-
+correct = 0
+incorrect = 0
 #loop your data to allow each instance to be your test set
 for i, instance in enumerate(db):
-
+    
     #add the training features to the 2D array X removing the instance that will be used for testing in this iteration. For instance, X = [[1, 3], [2, 1,], ...]]
     #--> add your Python code here
-    # X =
+    X = []
+
+    for j, row in enumerate(db):
+        if i == j:
+            continue
+        newRow = []
+        for val in row[:-1]:
+            newRow.append(int(val))
+        X.append(newRow)
 
     #transform the original training classes to numbers and add to the vector Y removing the instance that will be used for testing in this iteration. For instance, Y = [1, 2, ,...]
     #--> add your Python code here
     # Y =
+    Y = []
+    for j, row in enumerate(db):
+            if i == j:
+                continue
+            elif row[-1] == '+':
+                Y.append(1)
+            elif row[-1] == '-':
+                Y.append(2)
+            else:
+                Y.append(-1)
+                print('something went wrong')
+
 
     #store the test sample of this iteration in the vector testSample
     #--> add your Python code here
-    #testSample =
+    testSample = [int(instance[0]), int(instance[1])]
 
     #fitting the knn to the data
     clf = KNeighborsClassifier(n_neighbors=1, p=2)
@@ -44,12 +65,29 @@ for i, instance in enumerate(db):
     #use your test sample in this iteration to make the class prediction. For instance:
     #class_predicted = clf.predict([[1, 2]])[0]
     #--> add your Python code here
+    class_predicted = clf.predict([testSample])[0]
 
+
+    test = 0
     #compare the prediction with the true label of the test instance to start calculating the error rate.
     #--> add your Python code here
+    if instance[2] == '+':
+        test = 1
+    elif instance[2] == '-':
+        test = 2
+    else:
+        test = -1
+
+    if class_predicted == test:
+        correct += 1
+    else:
+        incorrect += 1
 
 #print the error rate
 #--> add your Python code here
+error_rate = incorrect/(correct+incorrect)
+
+print(error_rate)
 
 
 

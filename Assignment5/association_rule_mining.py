@@ -44,9 +44,9 @@ for index, row in df.iterrows():
     labels = {}
     for k in itemset:
         if k in row.values:
-            labels.append(str(k):1)
+            labels[k] = 1
         else:
-            labels.append(str(k):0)
+            labels[k] = 0
 
     encoded_vals.append(labels)
 
@@ -66,19 +66,29 @@ rules = association_rules(freq_items, metric="confidence", min_threshold=0.6)
 #Gain in Confidence: 52.17391304347825
 #-->add your python code below
 for i in range(len(rules.values)):
-    print(row[0])
-    print('Support: ' + rules['support'][i])
-    print('Confidence:' + rules['confidence'][i])
-    print('Prior:' +  min(rules['antecedent support'][i], rules['consequent support'][i]))
-    print('Gain in Confidence: '+ str)
 
+    rule = ''
+    for j, x in enumerate(rules["antecedents"][i]):
+        if j == len(rules["antecedents"][i])-1:
+            rule += x + ' -> '
+        else:
+            rule += x + ', '
 
+    for j, x in enumerate(rules["consequents"][i]):
+        if j == len(rules["consequents"][i])-1:
+            rule += x
+        else:
+            rule += x + ', '
 
-#To calculate the prior and gain in confidence, find in how many transactions the consequent of the rule appears (the supporCount below). Then,
-#use the gain formula provided right after.
-#prior = suportCount/len(encoded_vals) -> encoded_vals is the number of transactions
-#print("Gain in Confidence: " + str(100*(rule_confidence-prior)/prior))
-#-->add your python code below
+    print(rule)
+    rule_confidence = rules['confidence'][i]
+    print('Support:\t\t' + str(rules['support'][i]))
+    print('Confidence:\t\t' + str(rule_confidence))
+    prior = min(rules['antecedent support'][i], rules['consequent support'][i])
+    print('Prior:\t\t\t' +  str(prior))
+    print("Gain in Confidence:\t" + str(100*(rule_confidence-prior)/prior))
+    print()
+
 
 #Finally, plot support x confidence
 plt.scatter(rules['support'], rules['confidence'], alpha=0.5)
